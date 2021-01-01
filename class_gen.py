@@ -59,21 +59,26 @@ class Graph:
             sequence_error = sequence_check(nodes_done)
         self.nodes[index - 1 : index + 1] = nodes_done
 
-    def report(self):
+    def report(self, fname = False):
         self.xs = []
         self.ys = []
         for node in self.nodes:
             self.xs.append(node.x)
             self.ys.append(node.y)
         #print_nodes(self.nodes)
-        plt.scatter(self.xs, self.ys)
-        plt.show()
+        plt.plot(self.xs, self.ys)
+        if fname:
+            plt.title(fname)
+            plt.savefig('plots/' + fname + '.png')
+            plt.close()
+        else:
+            plt.show()
 
 class Generator:
-    def __init__(self, inter_width, inter_heigth):
+    def __init__(self, inter_width, inter_heigth, middle = 0.5):
         self.nodes = [Node(0,0),
-                      Node(0.5 - inter_width, inter_heigth),
-                      Node(0.5 + inter_width, 0 - inter_heigth),
+                      Node(middle - inter_width, inter_heigth),
+                      Node(middle + inter_width, 0 - inter_heigth),
                       Node(1,0)]
     def stretch(self, factor_x, factor_y):
         return [node.stretch(factor_x, factor_y) for node in self.nodes][:-1]
@@ -89,12 +94,17 @@ class Generator:
         plt.show()
 
 
-test_graph = Graph(10, 0.5)
-test_gen = Generator(0.2, 0.3)
+test_graph = Graph(10, 1)
+test_gen = Generator(0.15, 0.25, 0.5)
 #test_gen.report()
-for i in range(1000):
+test_graph.report('n_000')
+test_graph.apply_generator(test_gen)
+test_graph.report('n_001')
+test_graph.apply_generator(test_gen)
+test_graph.report('n_002')
+for i in range(98):
     test_graph.apply_generator(test_gen)
-test_graph.report()
+test_graph.report("n_100")
 #test_graph.apply_generator(test_gen)
 #test_gen.report()
 #test_graph.report()
